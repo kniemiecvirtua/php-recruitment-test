@@ -1,0 +1,6 @@
+# Directories
+/vendor
+
+# Files
+/conf.ini
+/web/.htaccess
