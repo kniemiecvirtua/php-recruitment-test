@@ -58,4 +58,62 @@ class PageManager
         $statement->bindParam(':page_id', $pageId, \PDO::PARAM_INT);
         $statement->execute();
     }
+
+    /**
+     * Retrieves total number of pages assigned to the given user
+     *
+     * @param $userId
+     * @return int
+     */
+    public function getTotalNumberUserPages($userId)
+    {
+        $query = $this->database->prepare(
+            'SELECT count(page_id) FROM pages JOIN websites ON websites.website_id = pages.website_id WHERE websites.user_id = :user_id'
+        );
+        $query->bindParam(':user_id', $userId, \PDO::PARAM_INT);
+        $query->execute();
+        return (int)$query->fetchColumn();
+    }
+
+    /**
+     * Retrieves last visited page
+     *
+     * @param $userId
+     * @return mixed
+     */
+    public function getLastVisitedPage($userId)
+    {
+        $query = $this->database->prepare(
+            'SELECT pages.url FROM pages 
+JOIN websites ON websites.website_id = pages.website_id 
+WHERE websites.user_id = :user_id 
+ORDER BY last_visit DESC 
+LIMIT 1'
+        );
+        $query->bindParam(':user_id', $userId, \PDO::PARAM_INT);
+        $query->execute();
+
+        return $query->fetchObject(Page::class);
+    }
+
+    /**
+     * Retrieves the most visited page
+     *
+     * @param $userId
+     * @return mixed
+     */
+    public function getMostVisitedPage($userId)
+    {
+        $query = $this->database->prepare(
+            'SELECT pages.url FROM pages 
+JOIN websites ON websites.website_id = pages.website_id 
+WHERE websites.user_id = :user_id 
+ORDER BY viewed DESC 
+LIMIT 1'
+        );
+        $query->bindParam(':user_id', $userId, \PDO::PARAM_INT);
+        $query->execute();
+
+        return $query->fetchObject(Page::class);
+    }
 }
