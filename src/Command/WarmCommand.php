@@ -66,10 +66,16 @@ class WarmCommand
 
             foreach ($pages as $page) {
                 $warmer->warm($page->getUrl());
-                $this->pageManager->setLastVisit($page->getPageId());
+                $this->updatePageStats($page->getPageId());
             }
         } else {
             $output->writeln('<error>Website with ID ' . $id . ' does not exists!</error>');
         }
+    }
+
+    private function updatePageStats($pageId)
+    {
+        $this->pageManager->setLastVisit($pageId);
+        $this->pageManager->increaseViewedCount($pageId);
     }
 }

@@ -6,6 +6,7 @@ use Snowdog\DevTest\Core\Database;
 
 class PageManager
 {
+    const DATETIME_FORMAT = 'Y-m-d H:i:s';
 
     /**
      * @var Database|\PDO
@@ -36,5 +37,25 @@ class PageManager
         $statement->bindParam(':website', $websiteId, \PDO::PARAM_INT);
         $statement->execute();
         return $this->database->lastInsertId();
+    }
+
+    public function setLastVisit($pageId)
+    {
+        $lastVisit = date(self::DATETIME_FORMAT);
+        $statement = $this->database->prepare(
+            'UPDATE pages SET last_visit = :last_visit WHERE page_id = :page_id'
+        );
+        $statement->bindParam(':last_visit', $lastVisit, \PDO::PARAM_STR);
+        $statement->bindParam(':page_id', $pageId, \PDO::PARAM_INT);
+        $statement->execute();
+    }
+
+    public function increaseViewedCount($pageId)
+    {
+        $statement = $this->database->prepare(
+            'UPDATE pages SET viewed = viewed + 1 WHERE page_id = :page_id'
+        );
+        $statement->bindParam(':page_id', $pageId, \PDO::PARAM_INT);
+        $statement->execute();
     }
 }
