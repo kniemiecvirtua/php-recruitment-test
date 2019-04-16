@@ -65,6 +65,12 @@
                     <?php endforeach ?>
                 </table>
             </div>
+
+        <div class="padded">
+            <p>Number of pages: <?php echo $this->getTotalPagesNumber() ?></p>
+            <p>Last visited page: <?php echo $this->getLastVisitedPageUrl() ?></p>
+            <p>Most visited page: <?php echo $this->getMostVisitedPage() ?></p>
+        </div>
         <?php endif ?>
     </div>
 
