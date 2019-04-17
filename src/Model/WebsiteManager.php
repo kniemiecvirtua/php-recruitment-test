@@ -62,4 +62,19 @@ class WebsiteManager
         return (bool)$query->fetchColumn();
     }
 
+    public function getWebsiteByUserAndHost(User $user, $hostname)
+    {
+        $userId = $user->getUserId();
+        $query = $this->database->prepare(
+            'SELECT * FROM websites WHERE user_id = :user_id AND hostname = :hostname'
+        );
+        $query->setFetchMode(\PDO::FETCH_CLASS, Website::class);
+        $query->bindParam(':user_id', $userId, \PDO::PARAM_INT);
+        $query->bindParam(':hostname', $hostname, \PDO::PARAM_STR);
+        $query->execute();
+
+        $website = $query->fetch(\PDO::FETCH_CLASS);
+        return $website;
+    }
+
 }
