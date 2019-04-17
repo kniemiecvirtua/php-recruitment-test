@@ -39,6 +39,18 @@ class PageManager
         return $this->database->lastInsertId();
     }
 
+    public function getPageByWebsiteAndUrl($websiteId, $url)
+    {
+        $query = $this->database->prepare(
+            'SELECT * FROM pages WHERE website_id = :website_id AND url = :url'
+        );
+        $query->bindParam(':website_id', $websiteId, \PDO::PARAM_INT);
+        $query->bindParam(':url', $url, \PDO::PARAM_STR);
+        $query->execute();
+
+        return $query->fetchObject(Page::class);
+    }
+
     public function setLastVisit($pageId)
     {
         $lastVisit = date(self::DATETIME_FORMAT);
