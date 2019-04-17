@@ -16,7 +16,8 @@ class WebsiteManager
         $this->database = $database;
     }
     
-    public function getById($websiteId) {
+    public function getById($websiteId)
+    {
         /** @var \PDOStatement $query */
         $query = $this->database->prepare('SELECT * FROM websites WHERE website_id = :id');
         $query->setFetchMode(\PDO::FETCH_CLASS, Website::class);
@@ -47,6 +48,18 @@ class WebsiteManager
         $statement->bindParam(':user', $userId, \PDO::PARAM_INT);
         $statement->execute();
         return $this->database->lastInsertId();
+    }
+
+    public function isUserWebsite($user, $website)
+    {
+        $query = $this->database->prepare(
+            'SELECT website_id FROM websites WHERE user_id = :user_id AND website_id = :website_id'
+        );
+        $query->bindParam(':user_id', $user, \PDO::PARAM_INT);
+        $query->bindParam(':website_id', $website, \PDO::PARAM_INT);
+        $query->execute();
+
+        return (bool)$query->fetchColumn();
     }
 
 }
