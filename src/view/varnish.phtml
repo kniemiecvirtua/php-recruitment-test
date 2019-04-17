@@ -57,7 +57,12 @@
                     </tr>
                     <?php foreach ($this->getWebsites() as $website): /** @var \Snowdog\DevTest\Model\Website $website */ ?>
                         <tr>
-                            <td><input type="checkbox" <?= in_array($website->getWebsiteId(), $websiteIds) ? 'checked="checked"' : '' ?>/></td>
+                            <td>
+                                <input class="association"
+                                       data-website="<?php echo $website->getWebsiteId() ?>"
+                                       data-varnish="<?php echo $varnish->getVarnishId() ?>"
+                                       type="checkbox" <?= in_array($website->getWebsiteId(), $websiteIds) ? 'checked="checked"' : '' ?>/>
+                            </td>
                             <td><?= $website->getName() ?></td>
                             <td><?= $website->getHostname() ?></td>
                         </tr>
@@ -70,6 +75,34 @@
 
 </div><!-- /.container -->
 
+<script>
+    var associations = document.getElementsByClassName("association");
+
+    var callAjax = function() {
+        var website = this.getAttribute('data-website'),
+            varnish = this.getAttribute('data-varnish'),
+            http = new XMLHttpRequest(),
+            url = '/link_varnish',
+            params;
+
+        params = 'website=' + website + '&varnish=' + varnish;
+        http.open('POST', url, true);
+
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        http.onreadystatechange = function() {
+            if (http.readyState == 4 && http.status == 200) {
+                alert('Response: ' + http.response);
+            }
+        }
+        http.send(params);
+    };
+
+    for (var i = 0; i < associations.length; i++) {
+        associations[i].addEventListener('click', callAjax, false);
+    }
+
+</script>
 
 </body>
 </html>
