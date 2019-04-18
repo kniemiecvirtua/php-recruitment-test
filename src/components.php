@@ -2,7 +2,7 @@
 
 use Snowdog\DevTest\Command\MigrateCommand;
 use Snowdog\DevTest\Command\WarmCommand;
-use Snowdog\DevTest\Command\SitemapCommand;
+use Virtua\SitemapComponent\Command\SitemapCommand;
 use Snowdog\DevTest\Component\CommandRepository;
 use Snowdog\DevTest\Component\Menu;
 use Snowdog\DevTest\Component\Migrations;
@@ -19,6 +19,8 @@ use Snowdog\DevTest\Controller\WebsiteAction;
 use Snowdog\DevTest\Controller\VarnishesAction;
 use Snowdog\DevTest\Controller\CreateVarnishAction;
 use Snowdog\DevTest\Controller\CreateVarnishLinkAction;
+use Virtua\SitemapComponent\Controller\ImportSitemapAction;
+use Virtua\SitemapComponent\Controller\SitemapFormAction;
 use Snowdog\DevTest\Menu\LoginMenu;
 use Snowdog\DevTest\Menu\RegisterMenu;
 use Snowdog\DevTest\Menu\WebsitesMenu;
@@ -35,10 +37,12 @@ RouteRepository::registerRoute('POST', '/page', CreatePageAction::class, 'execut
 RouteRepository::registerRoute('GET', '/varnishes', VarnishesAction::class, 'execute');
 RouteRepository::registerRoute('POST', '/varnish', CreateVarnishAction::class, 'execute');
 RouteRepository::registerRoute('POST', '/link_varnish', CreateVarnishLinkAction::class, 'execute');
+RouteRepository::registerRoute('POST', '/import_sitemap', ImportSitemapAction::class, 'execute');
+RouteRepository::registerRoute('GET', '/sitemap', SitemapFormAction::class, 'execute');
 
 CommandRepository::registerCommand('migrate_db', MigrateCommand::class);
 CommandRepository::registerCommand('warm [id]', WarmCommand::class);
-CommandRepository::registerCommand('sitemap [path] [website_name] [user_id]', SitemapCommand::class);
+CommandRepository::registerCommand('import_sitemap [path] [website_name] [user_id]', SitemapCommand::class);
 
 Menu::register(LoginMenu::class, 200);
 Menu::register(RegisterMenu::class, 250);
