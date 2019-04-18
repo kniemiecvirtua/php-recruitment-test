@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Snowdog\DevTest\Model;
 
@@ -6,7 +7,6 @@ use Snowdog\DevTest\Core\Database;
 
 class VarnishManager
 {
-
     /**
      * @var Database|\PDO
      */
@@ -17,7 +17,11 @@ class VarnishManager
         $this->database = $database;
     }
 
-    public function getAllByUser(User $user)
+    /**
+     * @param User $user
+     * @return Varnish[]
+     */
+    public function getAllByUser(User $user): array
     {
         $userId = $user->getUserId();
         $query = $this->database->prepare(
@@ -29,7 +33,11 @@ class VarnishManager
         return $query->fetchAll(\PDO::FETCH_CLASS, Varnish::class);
     }
 
-    public function getWebsites(Varnish $varnish)
+    /**
+     * @param Varnish $varnish
+     * @return Website[]
+     */
+    public function getWebsites(Varnish $varnish): array
     {
         $varnishId = $varnish->getVarnishId();
         $query = $this->database->prepare(
@@ -43,7 +51,11 @@ class VarnishManager
         return $query->fetchAll(\PDO::FETCH_CLASS, Website::class);
     }
 
-    public function getByWebsite(Website $website)
+    /**
+     * @param Website $website
+     * @return Varnish[]
+     */
+    public function getByWebsite(Website $website): array
     {
         $websiteId = $website->getWebsiteId();
         /** @var \PDOStatement $query */
@@ -58,7 +70,12 @@ class VarnishManager
         return $query->fetchAll(\PDO::FETCH_CLASS, Varnish::class);
     }
 
-    public function getIsActiveByWebsiteAndVarnish($varnish, $website)
+    /**
+     * @param int $varnish
+     * @param int $website
+     * @return bool
+     */
+    public function getIsActiveByWebsiteAndVarnish(int $varnish, int $website): bool
     {
         $query = $this->database->prepare(
             'SELECT varnish_id FROM varnish_website WHERE varnish_id = :varnish_id AND website_id = :website_id'
@@ -70,7 +87,12 @@ class VarnishManager
         return (bool)$query->fetchColumn();
     }
 
-    public function create(User $user, $ip)
+    /**
+     * @param User $user
+     * @param string $ip
+     * @return int
+     */
+    public function create(User $user, string $ip): int
     {
         $userId = $user->getUserId();
         /** @var \PDOStatement $statement */
@@ -79,10 +101,14 @@ class VarnishManager
         $statement->bindParam(':user_id', $userId, \PDO::PARAM_INT);
         $statement->execute();
 
-        return $this->database->lastInsertId();
+        return (int)$this->database->lastInsertId();
     }
 
-    public function link($varnish, $website)
+    /**
+     * @param int $varnish
+     * @param int $website
+     */
+    public function link(int $varnish, int $website): void
     {
         $statement = $this->database->prepare(
             'INSERT INTO varnish_website (varnish_id, website_id) VALUES (:varnish_id, :website_id)'
@@ -92,7 +118,11 @@ class VarnishManager
         $statement->execute();
     }
 
-    public function unlink($varnish, $website)
+    /**
+     * @param int $varnish
+     * @param int $website
+     */
+    public function unlink(int $varnish, int $website): void
     {
         $statement = $this->database->prepare(
             'DELETE FROM varnish_website WHERE website_id = :website_id AND varnish_id = :varnish_id'

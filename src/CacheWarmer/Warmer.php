@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Snowdog\DevTest\CacheWarmer;
 
@@ -14,7 +15,7 @@ class Warmer
     /**
      * @param Actor $actor
      */
-    public function setActor($actor)
+    public function setActor(Actor $actor): void
     {
         $this->actor = $actor;
     }
@@ -22,7 +23,7 @@ class Warmer
     /**
      * @param string $hostname
      */
-    public function setHostname($hostname)
+    public function setHostname(string $hostname): void
     {
         $this->hostname = $hostname;
     }
@@ -30,12 +31,16 @@ class Warmer
     /**
      * @param ResolverInterface $resolver
      */
-    public function setResolver($resolver)
+    public function setResolver(ResolverInterface $resolver): void
     {
         $this->resolver = $resolver;
     }
 
-    public function warm($url) {
+    /**
+     * @param string $url
+     */
+    public function warm(string $url): void
+    {
         $ip = $this->resolver->getIp($this->hostname);
         sleep(1); // this emulates visit to http://$hostname/$url via $ip
         $this->actor->act($this->hostname, $ip, $url);

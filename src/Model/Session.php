@@ -1,11 +1,18 @@
 <?php
+declare(strict_types=1);
 
 namespace Snowdog\DevTest\Model;
 
 class Session
 {
+    /**
+     * @var bool
+     */
     private $isLoggedIn;
 
+    /**
+     * @var UserManager
+     */
     private $userManager;
 
     public function __construct(UserManager $userManager)
@@ -13,7 +20,10 @@ class Session
         $this->userManager = $userManager;
     }
 
-    public function isLoggedIn()
+    /**
+     * @return bool
+     */
+    public function isLoggedIn(): bool
     {
         if (null === $this->isLoggedIn) {
             $this->isLoggedIn = !!$this->userManager->getByLogin($_SESSION['login']);

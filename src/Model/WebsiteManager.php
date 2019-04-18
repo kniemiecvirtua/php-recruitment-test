@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Snowdog\DevTest\Model;
 
@@ -50,7 +51,12 @@ class WebsiteManager
         return $this->database->lastInsertId();
     }
 
-    public function isUserWebsite($user, $website)
+    /**
+     * @param int $user
+     * @param int $website
+     * @return bool
+     */
+    public function isUserWebsite(int $user, int $website): bool
     {
         $query = $this->database->prepare(
             'SELECT website_id FROM websites WHERE user_id = :user_id AND website_id = :website_id'
@@ -62,7 +68,12 @@ class WebsiteManager
         return (bool)$query->fetchColumn();
     }
 
-    public function getWebsiteByUserAndHost(User $user, $hostname)
+    /**
+     * @param User $user
+     * @param string $hostname
+     * @return Website
+     */
+    public function getWebsiteByUserAndHost(User $user, string $hostname)
     {
         $userId = $user->getUserId();
         $query = $this->database->prepare(
