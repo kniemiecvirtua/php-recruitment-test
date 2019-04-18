@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Snowdog\DevTest\CacheWarmer;
 
@@ -10,7 +11,12 @@ class Actor
         $this->callable = $callable;
     }
 
-    public function act($hostname, $ip, $url)
+    /**
+     * @param string $hostname
+     * @param string $ip
+     * @param string $url
+     */
+    public function act(string $hostname, string $ip, string $url)
     {
         call_user_func($this->callable, $hostname, $ip, $url);
     }

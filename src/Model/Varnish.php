@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Snowdog\DevTest\Model;
 
@@ -17,7 +18,7 @@ class Varnish
     /**
      * @return int
      */
-    public function getVarnishId()
+    public function getVarnishId(): int
     {
         return $this->varnish_id;
     }
@@ -25,7 +26,7 @@ class Varnish
     /**
      * @return string
      */
-    public function getIp()
+    public function getIp(): string
     {
         return $this->ip;
     }
@@ -33,7 +34,7 @@ class Varnish
     /**
      * @return int
      */
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->user_id;
     }
